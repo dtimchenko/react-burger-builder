@@ -8,14 +8,14 @@ import Aux from '../../../hoc/Aux';
 const sideDrawer = (props) => {
     return (
         <Aux>
-            <Backdrop show/>
-            <div className={styles.SideDrawer}>
+            <Backdrop show={props.show} onClick={props.onHide}/>
+            <div className={[styles.SideDrawer, props.show ? styles.Open : styles.Closed].join(' ')}>
                 <div className={styles.Logo}>
                     <Logo />
                 </div>
 
                 <nav>
-                    <NavigationItems></NavigationItems>
+                    <NavigationItems/>
                 </nav>
             </div>
         </Aux>
