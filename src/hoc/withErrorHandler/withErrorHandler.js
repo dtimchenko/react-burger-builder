@@ -17,10 +17,14 @@ const withErrorHandler = (WrappedComponent, axios) => {
             });
         }
 
+        hideHandler = () =>{
+            this.setState({error: null});
+        }
+
         render() {
             return (
                 <Aux>
-                    <Modal show={this.state.error}>
+                    <Modal show={this.state.error} onHide={this.hideHandler}>
                         {this.state.error ? this.state.error.message : null}
                     </Modal>
                     <WrappedComponent {...this.props} />
