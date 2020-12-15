@@ -75,7 +75,8 @@ class BurgerBuilder extends Component {
     purchaseCancelHandler = () => this.setState({ purchasing: false });
 
     postOrder = (order) => {
-        axios.post('/orders.json', order)
+        axios
+            .post('/orders.json', order)
             .then(response => {
                 this.setState({ loading: false, purchasing: false });
             })
