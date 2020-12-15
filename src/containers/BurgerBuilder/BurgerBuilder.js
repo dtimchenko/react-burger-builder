@@ -18,15 +18,36 @@ const INGREDIENT_PRICES = {
 class BurgerBuilder extends Component {
 
     state = {
-        ingredients: {
-            salad: 0,
-            cheese: 0,
-            meat: 0,
-            bacon: 0
-        },
+        ingredients: null,
         totalPrice: 4,
         purchasing: false,
         loading: false
+    }
+
+    defaultOrder = {
+        ingredients: this.state.ingredients,
+        price: this.state.totalPrice,
+        customer: {
+            name: 'Test User',
+            address: {
+                street: 'Teststreet 1',
+                zipCode: 45678,
+                country: 'USA'
+            },
+            email: 'test@test.com'
+        }
+    }
+
+    loadIngredients = () => {
+        axios
+            .get('/ingredients.json')
+            .then(response => {
+                this.setState({ ingredients: response.data });
+            });
+    }
+
+    componentDidMount = () => {
+        this.loadIngredients();
     }
 
     addIngredientHadler = (type) => this.ingredientChange(type, (total, item) => total + item)
@@ -53,30 +74,19 @@ class BurgerBuilder extends Component {
 
     purchaseCancelHandler = () => this.setState({ purchasing: false });
 
-    purchaseContinueHandler = () => {
-        this.setState({ loading: true });
-
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer: {
-                name: 'Test User',
-                address: {
-                    street: 'Teststreet 1',
-                    zipCode: 45678,
-                    country: 'USA'
-                },
-                email: 'test@test.com'
-            }
-        }
-
-        axios.post('/orders', order)
+    postOrder = (order) => {
+        axios.post('/orders.json', order)
             .then(response => {
                 this.setState({ loading: false, purchasing: false });
             })
             .catch(error => {
-                this.setState({ loading: false, purchasing: false});
+                this.setState({ loading: false, purchasing: false });
             });
+    }
+
+    purchaseContinueHandler = () => {
+        this.setState({ loading: true });
+        this.postOrder(this.defaultOrder);
     }
 
     render() {
@@ -86,27 +96,35 @@ class BurgerBuilder extends Component {
             disabledInfo[key] = disabledInfo[key] <= 0;
         }
 
-        let orderSummary = this.state.loading
+        let orderSummary = this.state.loading || !this.state.ingredients
             ? <Spinner />
             : <OrderSummary
                 onCancel={this.purchaseCancelHandler}
                 onContinue={this.purchaseContinueHandler}
                 price={this.state.totalPrice}
-                ingredients={this.state.ingredients} />
+                ingredients={this.state.ingredients} />;
+
+        let burger = this.state.ingredients
+            ? <Burger ingredients={this.state.ingredients} />
+            : <Spinner />;
+
+        let builderControls = this.state.ingredients
+            ? <BuilderControls
+                price={this.state.totalPrice}
+                onIngredientAdd={this.addIngredientHadler}
+                onIngredientRemove={this.removeIngredientHandler}
+                purchasable={this.purchasable()}
+                onOrder={this.purchanseHandler}
+                disabledInfo={disabledInfo} />
+            : null;
 
         return (
             <Aux>
                 <Modal show={this.state.purchasing} onHide={this.purchaseCancelHandler}>
                     {orderSummary}
                 </Modal>
-                <Burger ingredients={this.state.ingredients} />
-                <BuilderControls
-                    price={this.state.totalPrice}
-                    onIngredientAdd={this.addIngredientHadler}
-                    onIngredientRemove={this.removeIngredientHandler}
-                    purchasable={this.purchasable()}
-                    onOrder={this.purchanseHandler}
-                    disabledInfo={disabledInfo} />
+                {burger}
+                {builderControls}
             </Aux>
         );
     }
