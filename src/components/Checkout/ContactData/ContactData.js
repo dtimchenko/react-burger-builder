@@ -62,12 +62,6 @@ class ContactData extends Component {
         }
     };
 
-    defaultOrder = {
-        ingredients: this.state.ingredients,
-        price: this.state.price,
-
-    }
-
     postOrder = (order) => {
         axios
             .post('/orders.json', order)
@@ -82,10 +76,20 @@ class ContactData extends Component {
     }
 
     orderHandler = () => {
-        this.postOrder(this.defaultOrder);
+        const formData = {}; 
+        Object.entries(this.state.orderForm).forEach(([key, value]) => formData[key] = value.value);
+
+        debugger;
+        const orderData = {
+            ingredients: this.props.ingredients,
+            price: this.props.price,
+            customerData: formData
+        }
+
+        this.postOrder(orderData);
     }
 
-    inputChnageHandler = (event, inputId) =>{
+    inputChangeHandler = (event, inputId) =>{
         let updatedForm = {...this.state.orderForm};
         let updatedInput = {...updatedForm[inputId]};
         updatedInput.value = event.target.value;
@@ -101,13 +105,13 @@ class ContactData extends Component {
             elementType={config.elementType} 
             elementConfig={config.elementConfig}
             value={config.value}
-            onChange={(event)=>{this.inputChnageHandler(event, key)}}/>
+            onChange={(event)=>{this.inputChangeHandler(event, key)}}/>
         ));
 
         return (
             <div className={styles.ContactData}>
                 <h4>Enter Contact Data</h4>
-                <form>
+                <form onSubmit={this.orderHandler}>
                     {formElements}
                     <Button type='Success' onClick={this.orderHandler}>ORDER</Button>
                 </form>
