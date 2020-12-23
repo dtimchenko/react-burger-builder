@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Button from '../../UI/Button/Button';
 import styles from './ContactData.module.css';
 import axios from "../../../hoc/axios-orders";
+import Input from "../../UI/Input/Input";
 
 
 class ContactData extends Component {
@@ -51,10 +52,10 @@ class ContactData extends Component {
             <div className={styles.ContactData}>
                 <h4>Enter Contact Data</h4>
                 <form>
-                    <input type='text' name='name' placeholder='Your name'/>
-                    <input type='text' name='email' placeholder='Your email'/>
-                    <input type='text' name='street' placeholder='Your street'/>
-                    <input type='text' name='postalCode' placeholder='Your code'/>
+                    <Input type='text' name='name' placeholder='Your name'/>
+                    <Input type='text' name='email' placeholder='Your email'/>
+                    <Input type='text' name='street' placeholder='Your street'/>
+                    <Input type='text' name='postalCode' placeholder='Your code'/>
                     <Button type='Success' onClick={this.onClickHandler}>ORDER</Button>
                 </form>
             </div>
