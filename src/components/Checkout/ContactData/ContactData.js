@@ -90,7 +90,6 @@ class ContactData extends Component {
         let updatedInput = {...updatedForm[inputId]};
         updatedInput.value = event.target.value;
         updatedForm[inputId] = updatedInput;
-
         this.setState({orderForm: updatedForm});
     }
 
