@@ -81,8 +81,17 @@ class ContactData extends Component {
         this.props.history.push('/');
     }
 
-    onClickHandler = () => {
+    orderHandler = () => {
         this.postOrder(this.defaultOrder);
+    }
+
+    inputChnageHandler = (event, inputId) =>{
+        let updatedForm = {...this.state.orderForm};
+        let updatedInput = {...updatedForm[inputId]};
+        updatedInput.value = event.target.value;
+        updatedForm[inputId] = updatedInput;
+
+        this.setState({orderForm: updatedForm});
     }
 
     render() {
@@ -92,7 +101,8 @@ class ContactData extends Component {
             <Input key={key} 
             elementType={config.elementType} 
             elementConfig={config.elementConfig}
-            value={config.value}/>
+            value={config.value}
+            onChange={(event)=>{this.inputChnageHandler(event, key)}}/>
         ));
 
         return (
@@ -100,7 +110,7 @@ class ContactData extends Component {
                 <h4>Enter Contact Data</h4>
                 <form>
                     {formElements}
-                    <Button type='Success' onClick={this.onClickHandler}>ORDER</Button>
+                    <Button type='Success' onClick={this.orderHandler}>ORDER</Button>
                 </form>
             </div>
         );
