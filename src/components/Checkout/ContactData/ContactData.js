@@ -3,6 +3,7 @@ import Button from '../../UI/Button/Button';
 import styles from './ContactData.module.css';
 import axios from "../../../hoc/axios-orders";
 import Input from "../../UI/Input/Input";
+import { connect } from 'react-redux';
 
 
 class ContactData extends Component {
@@ -126,7 +127,7 @@ class ContactData extends Component {
         const formValidationResult = !Object.values(updatedForm).map(config => config.validation ? config.validation.valid : true).some(it => !it);
 
         this.setState({ orderForm: updatedForm });
-        this.setState({isFormValid: formValidationResult});
+        this.setState({ isFormValid: formValidationResult });
     }
 
     isValid = (value, rules) => {
@@ -170,4 +171,11 @@ class ContactData extends Component {
     }
 }
 
-export default ContactData;
+const mapStateToProps = state => {
+    return {
+        ingredients: state.ingredients,
+        price: state.totalPrice
+    }
+}
+
+export default connect(mapStateToProps)(ContactData);
