@@ -6,8 +6,10 @@ class OrderSummary extends Component {
 
     render() {
 
-        const orderItems = Object.entries(this.props.ingredients)
-            .map(([key, value]) => <li key={key}><span style={{ textTransform: "capitalize" }}>{key}</span>: {value}</li>)
+        const orderItems = this.props.ingredients
+            ? Object.entries(this.props.ingredients)
+                .map(([key, value]) => <li key={key}><span style={{ textTransform: "capitalize" }}>{key}</span>: {value}</li>)
+            : null;
 
         return (
             <Aux>
