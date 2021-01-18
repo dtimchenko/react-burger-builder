@@ -21,6 +21,12 @@ const purchaseBurgerStart = () => {
     }
 };
 
+export const purchaseInit = () => {
+    return {
+        type: actions.PURCHASE_INIT
+    }
+};
+
 export const purchaseBurger = (order) => {
     return dispatch => {
         dispatch(purchaseBurgerStart());
